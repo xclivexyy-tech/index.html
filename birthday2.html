@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Birthday Surprise</title>
+  <style>
+    body {
+      min-height: 100vh;
+      margin: 0;
+      padding: 24px;
+      display: grid;
+      place-items: center;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      color: #49364b;
+      background: linear-gradient(135deg, #ffe0ec, #e7e5ff);
+    }
+
+    .card {
+      width: min(100%, 560px);
+      padding: 32px;
+      box-sizing: border-box;
+      border-radius: 24px;
+      background: #fffafc;
+      box-shadow: 0 12px 40px #734c7930;
+    }
+
+    h1 { color: #c04479; }
+    p { line-height: 1.7; }
+
+    button {
+      margin: 8px;
+      padding: 12px 22px;
+      border: 0;
+      border-radius: 999px;
+      background: #c04479;
+      color: white;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    button:hover { background: #9e2f60; }
+
+    #letter {
+      margin-top: 24px;
+      padding: 20px;
+      border-radius: 16px;
+      background: #fff0f5;
+      text-align: left;
+    }
+
+    #letter[hidden] { display: none; }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <h1>🎂 Happy Birthday lalab!🎈</h1>
+    <p>Hi birthday girl click mo button mwappsss.</p>
+
+    <button id="revealButton" type="button">Yohooo, bday girl click me</button>
+    <button id="musicButton" type="button">🎵 try to listen baby</button>
+
+    <section id="letter" hidden>
+      <h2>Happy Birthday Beb, 💌</h2>
+      <p>Dear Zyla Saraza Trinidad,</p>
+      <p>
+        Happy happy birthday, I hope you enjoy your day filled with "Joy"
+         and unexpected events together. You deserve this day as your special day, i know as you celebrate your birthday, there is sadness behind those every smiles of yours as someone wishes you a happy birthday
+         but i hope you know that your birthday is a very very special. i wish you the best of everything my love, u may be guided thru your success, may God bless you and give you a healthy life, as we step into another year of our journey. i hope we may continue to grow together and may we be able to share more memories.
+         continue for being the kindness one, smartest one, happiest one, carring, and the most yapper i met. i love you so much that you cannot imagine, hope you promise that we stay no matter what happens.
+         enjoy your special day langga as you turns to 20 this year, u may God bless you love. MWAPSSS. I love you
+        the very best today and always.
+      </p>
+      <p>P.S.<br>Cliveyy</p>
+    </section>
+  </main>
+
+  <script>
+    const letter = document.querySelector("#letter");
+    const revealButton = document.querySelector("#revealButton");
+    const musicButton = document.querySelector("#musicButton");
+
+    revealButton.addEventListener("click", () => {
+      letter.hidden = false;
+      revealButton.textContent = "Surprise lalab!💖";
+    });
+
+    musicButton.addEventListener("click", async () => {
+      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+
+      if (!AudioContextClass) {
+        musicButton.textContent = "Music isn't supported in this browser";
+        return;
+      }
+
+      const audio = new AudioContextClass();
+      await audio.resume();
+
+      // Note frequencies (Hz) for Happy Birthday
+      const C4 = 261.63, D4 = 293.66, E4 = 329.63, F4 = 349.23, G4 = 392.00, A4 = 440.00, Bb4 = 466.16, C5 = 523.25;
+
+      // Happy Birthday melody notes and durations
+      const song = [
+        { freq: C4, duration: 0.35 },
+        { freq: C4, duration: 0.25 },
+        { freq: D4, duration: 0.6 },
+        { freq: C4, duration: 0.6 },
+        { freq: F4, duration: 0.6 },
+        { freq: E4, duration: 1.0 },
+
+        { freq: C4, duration: 0.35 },
+        { freq: C4, duration: 0.25 },
+        { freq: D4, duration: 0.6 },
+        { freq: C4, duration: 0.6 },
+        { freq: G4, duration: 0.6 },
+        { freq: F4, duration: 1.0 },
+
+        { freq: C4, duration: 0.35 },
+        { freq: C4, duration: 0.25 },
+        { freq: C5, duration: 0.6 },
+        { freq: A4, duration: 0.6 },
+        { freq: F4, duration: 0.6 },
+        { freq: E4, duration: 0.6 },
+        { freq: D4, duration: 0.8 },
+
+        { freq: Bb4, duration: 0.35 },
+        { freq: Bb4, duration: 0.25 },
+        { freq: A4, duration: 0.6 },
+        { freq: F4, duration: 0.6 },
+        { freq: G4, duration: 0.6 },
+        { freq: F4, duration: 1.2 }
+      ];
+
+      let currentTime = audio.currentTime;
+
+      song.forEach((note) => {
+        const oscillator = audio.createOscillator();
+        const volume = audio.createGain();
+
+        oscillator.frequency.value = note.freq;
+        oscillator.type = "sine";
+
+        volume.gain.setValueAtTime(0.001, currentTime);
+        volume.gain.exponentialRampToValueAtTime(0.2, currentTime + 0.04);
+        volume.gain.exponentialRampToValueAtTime(0.001, currentTime + note.duration - 0.05);
+
+        oscillator.connect(volume);
+        volume.connect(audio.destination);
+
+        oscillator.start(currentTime);
+        oscillator.stop(currentTime + note.duration);
+
+        currentTime += note.duration + 0.08;
+      });
+
+      musicButton.textContent = "🎶 Playing Happy Birthday!";
+      const totalDuration = (currentTime - audio.currentTime) * 1000;
+
+      window.setTimeout(() => {
+        musicButton.textContent = "🎵 Play birthday music";
+        audio.close();
+      }, totalDuration + 300);
+    });
+  </script>
+</body>
+</html>
